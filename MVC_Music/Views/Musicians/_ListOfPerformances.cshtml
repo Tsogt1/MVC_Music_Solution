@@ -1,0 +1,42 @@
+﻿@model IEnumerable<MVC_Music.Models.Performance>
+<br />
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h5 class="panel-title"></h5>
+    </div>
+    <div class="panel-body scrollable-panel">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>
+                        Album
+                    </th>
+                    <th>
+                        Song
+                    </th>
+                    <th>
+                        Instrument
+                    </th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Song.Album.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Song.Title)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Instrument.Name)
+                        </td>
+                        
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

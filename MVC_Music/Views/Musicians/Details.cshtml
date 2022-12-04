@@ -1,0 +1,134 @@
+﻿@model MVC_Music.Models.Musician
+
+@{
+    ViewData["Title"] = "Musician Details";
+}
+
+<h2>Musician Details</h2>
+
+<div>
+    <hr />
+    <figure class="row">
+        <p class="col-auto">
+                     @{
+                if (Model.MusicianPhoto?.Content != null)
+                {
+                    @:
+                        string imageBase64 = Convert.ToBase64String(Model.MusicianPhoto.Content);
+                        string imageSrc = string.Format("data:" + Model.MusicianPhoto.MimeType + ";base64,{0}", imageBase64);
+                        <img src="@imageSrc" alt="Profile Picture of @Model.FullName" title="Profile Picture of @Model.FullName" class="img-fluid rounded" />
+                    @:
+                }
+            }
+
+        </p>
+        
+        <figcaption class="col mt-3">
+            <dl class="row lh-1">
+                <dt class = "col-sm-2">
+                    @Html.DisplayNameFor(model => model.FirstName)
+                </dt>
+                <dd class = "col-sm-10">
+                    @Html.DisplayFor(model => model.FirstName)
+                </dd>
+                <dt class = "col-sm-2">
+                    @Html.DisplayNameFor(model => model.MiddleName)
+                </dt>
+                <dd class = "col-sm-10">
+                    @Html.DisplayFor(model => model.MiddleName)
+                </dd>
+                <dt class = "col-sm-2">
+                    @Html.DisplayNameFor(model => model.LastName)
+                </dt>
+                <dd class = "col-sm-10">
+                    @Html.DisplayFor(model => model.LastName)
+                </dd>
+                <dt class = "col-sm-2">
+                    @Html.DisplayNameFor(model => model.Phone)
+                </dt>
+                <dd class = "col-sm-10">
+                    @Html.DisplayFor(model => model.PhoneFormatted)
+                </dd>
+                <dt class = "col-sm-2">
+                    @Html.DisplayNameFor(model => model.DOB)
+                </dt>
+                <dd class = "col-sm-10">
+                    @Html.DisplayFor(model => model.DOB)
+                </dd>
+                <dt class = "col-sm-2">
+                    @Html.DisplayNameFor(model => model.SIN)
+                </dt>
+                <dd class = "col-sm-10">
+                    @Html.DisplayFor(model => model.SINFormatted)
+                </dd>
+                <dt class = "col-sm-2">
+                    @Html.DisplayNameFor(model => model.Instrument)
+                </dt>
+                <dd class = "col-sm-10">
+                    @Html.DisplayFor(model => model.Instrument.Name)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Email)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Email)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Plays)
+                </dt>
+                <dd class="col-sm-10">
+                    @{
+                        int playCount = Model.Plays.Count;
+                        if (playCount > 0)
+                        {
+                            string firstPlay = Model.Plays.FirstOrDefault().Instrument.Name;
+                            if (playCount > 1)
+                            {
+                                string playList = "";
+                                var c = Model.Plays.ToList();
+                                for (int i = 1; i < playCount; i++)//Skip the first because we have it already
+                                {
+                                    playList += c[i].Instrument.Name + " <br />";
+                                }
+                                <a class="" role="button" data-bs-toggle="collapse" href="#collapseHistory@(Model.ID)"
+                                        aria-expanded="false" aria-controls="collapseHistory@(Model.ID)">
+                                    @firstPlay <span class="badge bg-info">@playCount</span>
+                                </a>
+                                <div class="collapse" id="collapseHistory@(Model.ID)">
+                                    @Html.Raw(playList)
+                                </div>
+                            }
+                            else
+                            {
+                                @firstPlay
+                            }
+                        }
+                    }
+                </dd>        
+
+            </dl>
+        </figcaption>
+    
+    </figure>
+    <hr />       
+
+    <dl class="row">
+        <dt class="col-sm-2">
+            Performances
+        </dt>
+        <dd class="col-sm-10">
+            <div id="performances">Performance List</div>
+        </dd>
+    </dl>
+</div>
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.ID">Edit</a> |
+    <a href='@ViewData["returnURL"]'>Back to Musician List</a>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+       $('#performances').load('/Musicians/ListOfPerformances/@Model.ID');
+    </script>
+}
